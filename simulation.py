@@ -7,9 +7,13 @@ from person import Person
 from utils import *
 
 class Simulation():
+    '''
+    Runs the simulation and handles updating visuals over time. 
+    '''
+
 
     def __init__(self, number_people = 100, step_size = 0.2, infected_range = 0.1):
-        self.infected_people, self.dead_people = []
+        self.infected_people, self.dead_people = [], []
         self.day = 0
         self.infected_range = infected_range
 
@@ -31,6 +35,16 @@ class Simulation():
         return 
 
     def load_people(self, number_people, step_size):
+        '''Create person objects up to number of people. 
+
+        args:
+            number_people: the number of people in the simulation
+            step_size: for each step in the simulation, degree of individual movement
+
+        returns:
+            list containing people
+        '''
+
         root = int(math.sqrt(number_people))
 
         if is_square(number_people):
@@ -58,6 +72,10 @@ class Simulation():
         return people
     
     def check_infections(self):
+        '''
+        For each infected person, check whether they've come into contact with
+        a healthy individual by comparing coordinates. 
+        '''
         for infected_person in self.infected_people:
             x, y = infected_person.coordinates[0], infected_person.coordinates[1]
             x_high, x_low = x + self.infected_range, x - self.infected_range
@@ -70,6 +88,11 @@ class Simulation():
                         self.infected_people.append(healthy_person)
 
     def animate(self, b):
+        ''' 
+        Create the animation. Function is CALLED by self.run()
+        every step of the simulation, updating dot placement and infected
+        status. 
+        '''
         for person in self.people:
             person.take_step()
 
@@ -92,5 +115,5 @@ class Simulation():
         return self.d, self.i, legend
 
     def run(self, number_days = 5):
-        anim = animation.FuncAnimation(self.fig, self.animate, interval = 10)
+        anim = animation.FuncAnimation(self.fig, self.animate, interval = 1)
         plt.show()
