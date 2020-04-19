@@ -6,11 +6,10 @@ from matplotlib import pyplot as plt
 from person import Person
 from utils import *
 
-
 class Simulation():
 
     def __init__(self, number_people = 100, step_size = 0.2, infected_range = 0.1):
-        self.infected_people = []
+        self.infected_people, self.dead_people = []
         self.day = 0
         self.infected_range = infected_range
 
