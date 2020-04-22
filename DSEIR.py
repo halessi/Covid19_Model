@@ -65,23 +65,17 @@ class DSEIR():
 
         
         
-<<<<<<< HEAD
-   
+    def getDSEIR(results):
+        for value in results:
+            Sy.append(value[0])
+            Ey.append(value[1])
+            Iy.append(value[2])
+            Ry.append(value[3])
+            Dy.append(value[4])
+            Tx.append(value[5])
+        return Sy, Ey, Iy, Ry, Dy
 
-
-=======
-        def getDSEIR(results):
-            for value in results:
-                Sy.append(value[0])
-                Ey.append(value[1])
-                Iy.append(value[2])
-                Ry.append(value[3])
-                Dy.append(value[4])
-                Tx.append(value[5])
-            return Sy, Ey, Iy, Ry, Dy
-
-        S_list, E_list, I_list, R_list, D_list = getSEIRD_lists(results)
->>>>>>> d5e9ca0d7bc0749afad14746ba471b435c2847a2
+        S_list, E_list, I_list, R_list, D_list = getSEIRD(results)
         
 
         def animation_frame(self, results, e):
@@ -115,7 +109,7 @@ class DSEIR():
         self.params = self.beta, self.sigma, self.gamma, self.mu                             #parameter tuple to be unpacked to calculate dif eqs
         self.initial_conditions = self.E, self.I, self.R, self.D, self.total_people      #initial conditions of simulation tuple to be unpacked for dif eqs
         self.primaryResults = self.getPrimaryDeriv(self.initial_conditions, self.time, self.params)
-        Sy, Ey, Iy, Ry, Dy = self.getSEIRD()
+        Sy, Ey, Iy, Ry, Dy = self.getDSEIR()
         print (Sy)
 
 
