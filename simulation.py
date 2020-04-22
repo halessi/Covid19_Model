@@ -40,6 +40,8 @@ class Simulation():
                                [person.coordinates[1] for person in self.exposed_people], 'mo', label = 'exposed: {}'.format(len(self.exposed_people)), markersize = 1)
         self.r, = self.ax.plot([person.coordinates[0] for person in self.recovered_people], 
                                [person.coordinates[1] for person in self.recovered_people], 'go', label = 'recovered: {}'.format(len(self.recovered_people)), markersize = 1)
+        self.p, = self.ax.plot([person.coordinates[0] for person in self.dead_people], 
+                               [person.coordinates[1] for person in self.dead_people], 'ko', label = 'dead: {}'.format(len(self.recovered_people)), markersize = 1)
         plt.legend(loc = 'upper left')
         return 
 
