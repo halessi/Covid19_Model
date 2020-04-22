@@ -10,7 +10,7 @@ class SEIRD():
         self.I = 0                           #initial number infected people 
         self.R = 0   
         self.D = 0
-        self.time_days = 160                        #Initial number recovered people
+        self.time_days = 100                        #Initial number recovered people
         self.total_people = 100000         #total population soize
         self.sigma = .143                    #Rate of latent individuals becoming infected
         self.gamma =  .095                   #recovery/ mortality rate == 1/duration of infection = gamma
@@ -59,7 +59,7 @@ class SEIRD():
         lineI.set_label('Infected')
         lineR.set_label('Recovered')
         lineD.set_label('Dead')
-        ax.legend()
+        ax.legend(loc = 'center right')
 
         Sy, Ey, Iy, Ry, Dy, Tx   = [], [], [], [], [], []
         
@@ -79,7 +79,7 @@ class SEIRD():
             lineD.set_data(Tx[0:e.timestep], Dy[0:e.timestep])
             e.timestep += 1
 
-            return self.lineS, self.lineE, self.lineI, self.lineR, self.lineD,
+            return lineS, lineE, lineI, lineR, lineD,
         
         timestep = timekeeper()
         animation = FuncAnimation(fig, func = animation_frame,  fargs = [results, timestep], interval = 100)
@@ -96,10 +96,6 @@ class SEIRD():
 class timekeeper():
     def __init__(self):
         self.timestep = 0
-
-
-
-
 
 if __name__ == "__main__":
     seird = SEIRD()

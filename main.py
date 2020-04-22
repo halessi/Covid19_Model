@@ -6,20 +6,20 @@ Model allows for SEIRD epidemiological examination of COVID-19 kinetics.
 
 from simulation import Simulation
 
-STEP_SIZE = 0.2
-NUMBER_OF_PEOPLE = 22500
-NUMBER_OF_DAYS = 10
-INFECTED_RANGE = 1
-BETA = 0                    # magnitude of social distancings
-SIGMA = 0.14                # incubation rate (i.e., time to symptoms showing)
-GAMMA = 0                   # recovery rate
-MU = 0                      # death rate
-S0 = 0                                         
-
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--sz', '--step_size', help = 'size of movement for person', type = int, default =  5)
+    parser.add_argument('--E', '--exposed', help = 'initial # people exposed', type = int, default =  1)
+    parser.add_argument('--I', '--infected', help = 'initial # people infected', type = int, default =  0)
+    parser.add_argument('--R', '--recovered', help = 'initial # people recovered', type = int, default = 0)
+    parser.add_argument('--D', '--dead', help = 'initial # people dead', type = int, default =  0)
+    parser.add_argument('--TD', '--time_days', help = 'size of movement for person', type = int, default =  160)
+    parser.add_argument('--TP', '--total_people', help = 'total population size', type = int, default =  100000)
+    parser.add_argument('--sig', '--sigma', help = 'Rate of latent individuals becoming infected (1/latent infection period)', type = int, default =  .143)
+    parser.add_argument('--gam', '--gamma', help = 'Recovery rate == 1/duration of infection = gamma', type = int, default =  .095)
+    parser.add_argument('--mu', '--mu', help = ' Death rate', type = int, default =  .0034)
+    parser.add_argument('--prob', '--prob_people', help = 'beta knot= probability of infection if meeting an infected person', type = int, default =  .1)
+    parser.add_argument('--numb', '--numb_people', help = 'k = total number of people encountered', type = int, default =  10)
 
     simulation = Simulation(number_people = NUMBER_OF_PEOPLE, 
                             step_size = STEP_SIZE,
