@@ -99,9 +99,11 @@ class DSEIR():
         self.primaryResults = self.getPrimaryDeriv(self.initial_conditions, self.time, self.params)
         self.makeCoordsandPlot(self.primaryResults, self.time, self.total_people, self.time_days)
 
+
 class timekeeper():
     def __init__(self):
         self.timestep = 0
+
 
 if __name__ == "__main__":
     seird = DSEIR()
