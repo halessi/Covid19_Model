@@ -106,15 +106,20 @@ class Simulation():
     #                     self.infected_people.append(healthy_person)
 
     def assign_infections(self):
-        number_new_susceptible = int(self.DSEIR_values[self.day][0] - len(self.people)) # new - existing gives difference for assignment
-        number_new_exposed     = int(self.DSEIR_values[self.day][1] - len(self.exposed_people))
-        number_new_infected    = int(self.DSEIR_values[self.day][2] - len(self.infected_people))
-        number_new_recovered   = int(self.DSEIR_values[self.day][3] - len(self.recovered_people))
-        number_new_dead        = int(self.DSEIR_values[self.day][4] - len(self.dead_people))
+        number_new_susceptible = abs(int(self.DSEIR_values[0][self.day] - len(self.people))) # new - existing gives difference for assignment
+        number_new_exposed     = abs(int(self.DSEIR_values[1][self.day] - len(self.exposed_people)))
+        number_new_infected    = abs(int(self.DSEIR_values[2][self.day] - len(self.infected_people)))
+        number_new_recovered   = abs(int(self.DSEIR_values[3][self.day] - len(self.recovered_people)))
+        number_new_dead        = abs(int(self.DSEIR_values[4][self.day] - len(self.dead_people)))
 
-        print(number_new_exposed)
-        print(number_new_infected)
+        print(number_new_susceptible, number_new_exposed, number_new_infected, number_new_recovered, number_new_dead)
         exit()
+
+    def notInfected_takeStep(self):
+        return NotImplementedError
+
+    def infected_takeStep(self):
+        return NotImplementedError
 
     def animate(self, b):
         ''' 
@@ -122,20 +127,23 @@ class Simulation():
         every step of the simulation, updating dot placement and infected
         status. 
         '''
+        self.notInfected_takeStep()
+        self.infected_takeStep()
+
+        self.day += 1
         self.assign_infections()
 
-        self.d.set_data([person.coordinates[0] for person in self.people],
-                        [person.coordinates[1] for person in self.people])   
+        # self.d.set_data([person.coordinates[0] for person in self.people],
+        #                 [person.coordinates[1] for person in self.people])   
 
-        self.i.set_data([person.coordinates[0] for person in self.infected_people],
-                        [person.coordinates[1] for person in self.infected_people])
+        # self.i.set_data([person.coordinates[0] for person in self.infected_people],
+        #                 [person.coordinates[1] for person in self.infected_people])
 
         legend = plt.legend(['healthy: {}'.format(len(self.people)), 
                             'infected: {}'.format(len(self.infected_people))],
                             #'day: {}'.format(self.day)], 
                             loc = 'upper left')
 
-        self.day += 1
         return self.d, self.i, legend
 
     def run(self, number_days = 5):
