@@ -17,8 +17,10 @@ class DSEIR():
         self.mu = .0034              #Death rate
         self.prob_Meeting_New_Person = .1     #beta knot= probability of infection if meeting an infected person
         self.number_People_Encountered = 25    #k = total number of people encountered
+
+        self.runAll()
+
     
-   
     def getPrimaryDeriv(self, initial_conditions, time, params):
         self.E, self.I, self.R, self.D, self.N = self.initial_conditions
         self.S = self.N - (self.E + self.I + self.R + self.D)
@@ -61,20 +63,10 @@ class DSEIR():
         lineD.set_label('Dead')
         ax.legend(loc = 'center right')
 
-        Sy, Ey, Iy, Ry, Dy, Tx   = [], [], [], [], [], []
         
         
-        def getSEIRD_lists(results):
-            for value in results:
-                Sy.append(value[0])
-                Ey.append(value[1])
-                Iy.append(value[2])
-                Ry.append(value[3])
-                Dy.append(value[4])
-                Tx.append(value[5])
-            return Sy, Ey, Iy, Ry, Dy
+   
 
-        S_list, E_list, I_list, R_list, D_list = getSEIRD_lists(results)
 
         
 
@@ -91,14 +83,26 @@ class DSEIR():
         timestep = timekeeper()
         animation = FuncAnimation(fig, func = animation_frame,  fargs = [results, timestep], interval = 100)
         plt.show()
-        
+
+    def getSEIRD(self):
+        i=0
+        Sy, Ey, Iy, Ry, Dy, Tx   = [], [], [], [], [], []
+        for value in self.primary_results:
+            Sy.append(value[0])
+            Ey.append(value[1])
+            Iy.append(value[2])
+            Ry.append(value[3])
+            Dy.append(value[4])
+        return Sy, Ey, Iy, Ry, Dy  
+
     def runAll(self):
         self.time = np.linspace(0, self.time_days, self.time_days +1) #grid of time points for simulation
         self.beta =  self.prob_Meeting_New_Person * self.number_People_Encountered   #rate at which infectionus people interact with each other = reproduction number * gamma 
         self.params = self.beta, self.sigma, self.gamma, self.mu                             #parameter tuple to be unpacked to calculate dif eqs
         self.initial_conditions = self.E, self.I, self.R, self.D, self.total_people      #initial conditions of simulation tuple to be unpacked for dif eqs
         self.primaryResults = self.getPrimaryDeriv(self.initial_conditions, self.time, self.params)
-        self.makeCoordsandPlot(self.primaryResults, self.time, self.total_people, self.time_days)
+        Sy, Ey, Iy, Ry, Dy = self.getSEIRD()
+        print (Sy)
 
 class timekeeper():
     def __init__(self):
@@ -106,4 +110,4 @@ class timekeeper():
 
 if __name__ == "__main__":
     seird = DSEIR()
-    seird.runAll()
+    #seird.runAll()
