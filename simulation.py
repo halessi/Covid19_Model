@@ -16,7 +16,10 @@ class Simulation():
         self.infected_people, self.dead_people = [], []
         self.day = 0
 
-        self.people = self.load_people(number_people = args.TP)
+        self.people = self.load_people(number_people = args.TP, 
+                                       number_infected = args.I,
+                                       number_exposed = args.E,
+                                       )
         print('here')
         exit()
         self.plot = self.load_plot(self.people)
@@ -35,7 +38,7 @@ class Simulation():
         plt.legend(loc = 'upper left')
         return 
 
-    def load_people(self, number_people):
+    def load_people(self, number_people, args):
         '''Create person objects up to number of people. 
 
         args:
@@ -63,6 +66,7 @@ class Simulation():
                 people.append(Person(x, y))
             x += 1
             y = 1
+
 
         person = people[np.random.randint(0, number_people)]
         person.infected = True

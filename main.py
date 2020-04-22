@@ -7,25 +7,13 @@ Model allows for SEIRD epidemiological examination of COVID-19 kinetics.
 from simulation import Simulation
 import argparse
 
-<<<<<<< HEAD
-def main():
-<<<<<<< HEAD
-    
-=======
-    simulation = Simulation(number_people = NUMBER_OF_PEOPLE, 
-                            step_size = STEP_SIZE,
-                            infected_range = INFECTED_RANGE)
-    simulation.run(number_days = 10)
-=======
 def main(args):
     simulation = Simulation(args)
     simulation.run(number_days = args.TD)
->>>>>>> 73c7ccd0622b49b268ba329d966b246847aec841
 
     args = parser.parse_args()
 
 if __name__ == "__main__":
->>>>>>> c0ebb446a6cd108b8cb5b99aefc9718c9b0f5819
     parser = argparse.ArgumentParser()
     parser.add_argument('--E', '--exposed', help = 'initial # people exposed', type = int, default =  1)
     parser.add_argument('--I', '--infected', help = 'initial # people infected', type = int, default =  0)
