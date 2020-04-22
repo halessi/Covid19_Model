@@ -109,5 +109,5 @@ class timekeeper():
 
 
 if __name__ == "__main__":
-    seird = DSEIR(args)
+    seird = DSEIR( args)
     #seird.runAll()
