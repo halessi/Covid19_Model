@@ -5,18 +5,18 @@ from matplotlib.animation import FuncAnimation
 
 class DSEIR():
     ###  SIMULATION SETUP ###
-    def __init__(self):
-        self.E = 3                           #initial number of exposed people
-        self.I = 3                           #initial number infected people 
-        self.R = 0   
-        self.D = 0
-        self.time_days = 100                        #Initial number recovered people
-        self.total_people = 100000         #total population soize
-        self.sigma = .143                    #Rate of latent individuals becoming infected
-        self.gamma =  .095                   #recovery/ mortality rate == 1/duration of infection = gamma
-        self.mu = .0034              #Death rate
-        self.prob_Meeting_New_Person = .1     #beta knot= probability of infection if meeting an infected person
-        self.number_People_Encountered = 25    #k = total number of people encountered
+    def __init__(self, args):
+        self.E = args.E                          #initial number of exposed people
+        self.I = args.I                           #initial number infected people 
+        self.R = args.R   
+        self.D = args.D
+        self.time_days = args.TD                        #Initial number recovered people
+        self.total_people = args.TP         #total population soize
+        self.sigma = args.sig                    #Rate of latent individuals becoming infected
+        self.gamma =  args.gam                   #recovery/ mortality rate == 1/duration of infection = gamma
+        self.mu = args.mu              #Death rate
+        self.prob_Meeting_New_Person = args.prob_people    #beta knot= probability of infection if meeting an infected person
+        self.number_People_Encountered = args.numb_people    #k = total number of people encountered
 
         self.runAll()
 
