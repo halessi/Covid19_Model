@@ -5,6 +5,7 @@ Model allows for SEIRD epidemiological examination of COVID-19 kinetics.
 '''
 
 from simulation import Simulation
+import argparse
 
 STEP_SIZE = 0.2
 NUMBER_OF_PEOPLE = 22500
@@ -25,6 +26,8 @@ def main():
                             step_size = STEP_SIZE,
                             infected_range = INFECTED_RANGE)
     simulation.run(number_days = 10)
+
+    args = parser.parse_args()
 
 if __name__ == "__main__":
     main()
