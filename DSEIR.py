@@ -3,11 +3,11 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-class SEIRD():
+class DSEIR():
     ###  SIMULATION SETUP ###
     def __init__(self):
-        self.E = 1                           #initial number of exposed people
-        self.I = 0                           #initial number infected people 
+        self.E = 3                           #initial number of exposed people
+        self.I = 3                           #initial number infected people 
         self.R = 0   
         self.D = 0
         self.time_days = 100                        #Initial number recovered people
@@ -63,13 +63,20 @@ class SEIRD():
 
         Sy, Ey, Iy, Ry, Dy, Tx   = [], [], [], [], [], []
         
-        for value in results:
-            Sy.append(value[0])
-            Ey.append(value[1])
-            Iy.append(value[2])
-            Ry.append(value[3])
-            Dy.append(value[4])
-            Tx.append(value[5])
+        
+        def getSEIRD_lists(results):
+            for value in results:
+                Sy.append(value[0])
+                Ey.append(value[1])
+                Iy.append(value[2])
+                Ry.append(value[3])
+                Dy.append(value[4])
+                Tx.append(value[5])
+            return Sy, Ey, Iy, Ry, Dy
+
+        S_list, E_list, I_list, R_list, D_list = getSEIRD_lists(results)
+
+        
 
         def animation_frame(self, results, e):
             lineS.set_data(Tx[0:e.timestep], Sy[0:e.timestep])
@@ -98,5 +105,5 @@ class timekeeper():
         self.timestep = 0
 
 if __name__ == "__main__":
-    seird = SEIRD()
+    seird = DSEIR()
     seird.runAll()
