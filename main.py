@@ -8,8 +8,8 @@ from simulation import Simulation
 import argparse
 
 def main():
+    
     parser = argparse.ArgumentParser()
-
     parser.add_argument('--E', '--exposed', help = 'initial # people exposed', type = int, default =  1)
     parser.add_argument('--I', '--infected', help = 'initial # people infected', type = int, default =  0)
     parser.add_argument('--R', '--recovered', help = 'initial # people recovered', type = int, default = 0)
