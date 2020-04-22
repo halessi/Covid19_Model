@@ -23,14 +23,12 @@ class DSEIR():
         self.E, self.I, self.R, self.D, self.N = self.initial_conditions
         self.S = self.N - (self.E + self.I + self.R + self.D)
         self.beta, self.sigma, self.gamma, self.mu = self.params
-
         self.primary_results = odeint(func = self.takeDeriv, y0 = [self.S, self.E, self.I, self.R, self.D], \
             t = self.time, args=(self.beta, self.gamma, self.sigma, self.mu))
         self.primary_resultsLIST = self.primary_results.tolist()
         return self.primary_resultsLIST 
 
     def takeDeriv(self, initial_value, t, beta, sigma, gamma, mu):
-        print(initial_value)
         self.S, self.E, self.I, self.R, self.D = initial_value
         self.N = self.S + self.E + self. I + self.R + self.D
         self.dSdt = (-self.beta * self.S * self.I )/ self.N

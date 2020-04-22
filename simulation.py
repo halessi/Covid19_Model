@@ -20,9 +20,10 @@ class Simulation():
                                        number_infected = args.I,
                                        number_exposed = args.E,
                                        )
+
         self.plot = self.load_plot(number_people = args.TP)
         self.DSEIR = DSEIR(args)
-        D, S, E, I, R = self.DSEIR.getDSEIR()
+        self.DSEIR_values = [self.DSEIR.getDSEIR()] # S E I R D, order
 
     def load_plot(self, number_people):
         # calculate square root
@@ -101,19 +102,22 @@ class Simulation():
     #                     self.people.remove(healthy_person)
     #                     self.infected_people.append(healthy_person)
 
+    def assign_infections(self):
+        number_new_susceptible = self.DSEIR_values[self.day][0] - len(self.people) # new - existing gives difference for assignment
+        number_new_exposed     = self.DSEIR_values[self.day][1] - len(self.exposed_people)
+        number_new_infections  = self.DSEIR_values[self.day][2] - len(self.infected_people) 
+        number_new_recovered   = self.DSEIR_values[self.day][3] - len(self.recovered_people) 
+        number_new_dead        = self.DSEIR_values[self.day][4] - len(self.dead_people)
+
+        print(number_new_exposed)
+
     def animate(self, b):
         ''' 
         Create the animation. Function is CALLED by self.run()
         every step of the simulation, updating dot placement and infected
         status. 
         '''
-        for person in self.people:
-            person.take_step()
-
-        for person in self.infected_people:
-            person.take_step(step_size = 0.1)
-
-        self.check_infections()
+        self.assign_infections()
 
         self.d.set_data([person.coordinates[0] for person in self.people],
                         [person.coordinates[1] for person in self.people])   
@@ -126,6 +130,7 @@ class Simulation():
                             #'day: {}'.format(self.day)], 
                             loc = 'upper left')
 
+        self.day += 1
         return self.d, self.i, legend
 
     def run(self, number_days = 5):
