@@ -21,6 +21,8 @@ class Simulation():
                                        number_exposed = args.E,
                                        )
         self.plot = self.load_plot(number_people = args.TP)
+        self.DSEIR = DSEIR(args)
+        D, S, E, I, R = self.DSEIR.getDSEIR()
 
     def load_plot(self, number_people):
         # calculate square root

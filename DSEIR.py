@@ -15,8 +15,8 @@ class DSEIR():
         self.sigma = args.sig                    #Rate of latent individuals becoming infected
         self.gamma =  args.gam                   #recovery/ mortality rate == 1/duration of infection = gamma
         self.mu = args.mu              #Death rate
-        self.prob_Meeting_New_Person = args.prob_people    #beta knot= probability of infection if meeting an infected person
-        self.number_People_Encountered = args.numb_people    #k = total number of people encountered
+        self.prob_Meeting_New_Person = args.prob    #beta knot= probability of infection if meeting an infected person
+        self.number_People_Encountered = args.numb    #k = total number of people encountered
         self.runAll()
     
     def getPrimaryDeriv(self, initial_conditions, time, params):
@@ -76,6 +76,9 @@ class DSEIR():
         plt.show()
         
     def getDSEIR(self):
+        '''
+        this iz th3e documentation
+        '''
         Sy, Ey, Iy, Ry, Dy = [], [], [], [], [],
         for value in self.primary_results:
             Sy.append(value[0])
@@ -92,14 +95,10 @@ class DSEIR():
         self.params = self.beta, self.sigma, self.gamma, self.mu                             #parameter tuple to be unpacked to calculate dif eqs
         self.initial_conditions = self.E, self.I, self.R, self.D, self.total_people      #initial conditions of simulation tuple to be unpacked for dif eqs
         self.primaryResults = self.getPrimaryDeriv(self.initial_conditions, self.time, self.params)
-        Sy, Ey, Iy, Ry, Dy = self.getDSEIR()
-        print (Sy)
-
 
 class timekeeper():
     def __init__(self):
         self.timestep = 0
-
 
 if __name__ == "__main__":
     seird = DSEIR(args)
