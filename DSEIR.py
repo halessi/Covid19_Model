@@ -64,7 +64,7 @@ class DSEIR():
         Sy, Ey, Iy, Ry, Dy, Tx   = [], [], [], [], [], []
         
         
-        def getSEIRD_lists(results):
+        def getDSEIR(results):
             for value in results:
                 Sy.append(value[0])
                 Ey.append(value[1])
@@ -75,7 +75,6 @@ class DSEIR():
             return Sy, Ey, Iy, Ry, Dy
 
         S_list, E_list, I_list, R_list, D_list = getSEIRD_lists(results)
-
         
 
         def animation_frame(self, results, e):
