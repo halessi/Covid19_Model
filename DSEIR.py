@@ -3,7 +3,7 @@ from scipy.integrate import odeint
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-class SEIRD():
+class DSEIR():
     ###  SIMULATION SETUP ###
     def __init__(self):
         self.E = 1                           #initial number of exposed people

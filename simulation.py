@@ -4,6 +4,7 @@ import numpy as np
 from matplotlib import animation
 from matplotlib import pyplot as plt
 from person import Person
+from DSEIR import DSEIR
 from utils import *
 
 class Simulation():
@@ -28,11 +29,13 @@ class Simulation():
         self.fig = plt.figure(figsize=(10,10))
         self.ax = plt.axes(xlim = (0, root), ylim = (0, root))
         self.d, = self.ax.plot([person.coordinates[0] for person in self.people],
-                               [person.coordinates[1] for person in self.people], 'bo', label = 'healthy: {}'.format(len(self.people)), markersize = 1)
+                               [person.coordinates[1] for person in self.people], 'bo', label = 'susceptible: {}'.format(len(self.people)), markersize = 1)
         self.i, = self.ax.plot([person.coordinates[0] for person in self.infected_people], 
                                [person.coordinates[1] for person in self.infected_people], 'ro', label = 'infected: {}'.format(len(self.infected_people)), markersize = 1)
         self.e, = self.ax.plot([person.coordinates[0] for person in self.exposed_people],
-                               [person.coordinates[1] for person in self.exposed_people], 'oo')
+                               [person.coordinates[1] for person in self.exposed_people], 'mo', label = 'exposed: {}'.format(len(self.exposed_people)), markersize = 1)
+        self.r, = self.ax.plot([person.coordinates[0] for person in self.recovered_people], 
+                               [person.coordinates[1] for person in self.recovered_people], 'go', label = 'recovered: {}'.format(len(self.recovered_people)), markersize = 1)
         plt.legend(loc = 'upper left')
         return 
 
@@ -80,21 +83,21 @@ class Simulation():
 
         return people
     
-    def check_infections(self):
-        '''
-        For each infected person, check whether they've come into contact with
-        a healthy individual by comparing coordinates. 
-        '''
-        for infected_person in self.infected_people:
-            x, y = infected_person.coordinates[0], infected_person.coordinates[1]
-            x_high, x_low = x + self.infected_range, x - self.infected_range
-            y_high, y_low = y + self.infected_range, y - self.infected_range
+    # def check_infections(self):
+    #     '''
+    #     For each infected person, check whether they've come into contact with
+    #     a healthy individual by comparing coordinates. 
+    #     '''
+    #     for infected_person in self.infected_people:
+    #         x, y = infected_person.coordinates[0], infected_person.coordinates[1]
+    #         x_high, x_low = x + self.infected_range, x - self.infected_range
+    #         y_high, y_low = y + self.infected_range, y - self.infected_range
 
-            for healthy_person in self.people:
-                 if (x_high > healthy_person.coordinates[0] > x_low) and (y_high > healthy_person.coordinates[1] > y_low):
-                        healthy_person.infected = True
-                        self.people.remove(healthy_person)
-                        self.infected_people.append(healthy_person)
+    #         for healthy_person in self.people:
+    #              if (x_high > healthy_person.coordinates[0] > x_low) and (y_high > healthy_person.coordinates[1] > y_low):
+    #                     healthy_person.infected = True
+    #                     self.people.remove(healthy_person)
+    #                     self.infected_people.append(healthy_person)
 
     def animate(self, b):
         ''' 
@@ -124,5 +127,7 @@ class Simulation():
         return self.d, self.i, legend
 
     def run(self, number_days = 5):
+        SEIRD = DSEIR()
+        S, E, I, R, D = SEIRD.getSEIRD()
         anim = animation.FuncAnimation(self.fig, self.animate, interval = 1)
         plt.show()
