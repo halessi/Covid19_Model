@@ -19,19 +19,20 @@ class Simulation():
                                        number_infected = args.I,
                                        number_exposed = args.E,
                                        )
-        self.plot = self.load_plot(self.people)
+        self.plot = self.load_plot(number_people = args.TP)
 
-    def load_plot(self, people):
+    def load_plot(self, number_people):
         # calculate square root
-        number_people = len(people)
         root = math.sqrt(number_people)
 
         self.fig = plt.figure(figsize=(10,10))
         self.ax = plt.axes(xlim = (0, root), ylim = (0, root))
         self.d, = self.ax.plot([person.coordinates[0] for person in self.people],
-                               [person.coordinates[1] for person in self.people], 'ko', label = 'healthy: {}'.format(len(self.people)), markersize = 1)
+                               [person.coordinates[1] for person in self.people], 'bo', label = 'healthy: {}'.format(len(self.people)), markersize = 1)
         self.i, = self.ax.plot([person.coordinates[0] for person in self.infected_people], 
                                [person.coordinates[1] for person in self.infected_people], 'ro', label = 'infected: {}'.format(len(self.infected_people)), markersize = 1)
+        self.e, = self.ax.plot([person.coordinates[0] for person in self.exposed_people],
+                               [person.coordinates[1] for person in self.exposed_people], 'oo')
         plt.legend(loc = 'upper left')
         return 
 
