@@ -12,12 +12,13 @@ class Simulation():
     '''
 
 
-    def __init__(self, number_people = 100, step_size = 0.2, infected_range = 0.1):
+    def __init__(self, args):
         self.infected_people, self.dead_people = [], []
         self.day = 0
-        self.infected_range = infected_range
 
-        self.people = self.load_people(number_people = number_people, step_size = step_size)
+        self.people = self.load_people(number_people = args.TP)
+        print('here')
+        exit()
         self.plot = self.load_plot(self.people)
 
     def load_plot(self, people):
@@ -34,7 +35,7 @@ class Simulation():
         plt.legend(loc = 'upper left')
         return 
 
-    def load_people(self, number_people, step_size):
+    def load_people(self, number_people):
         '''Create person objects up to number of people. 
 
         args:
@@ -56,10 +57,10 @@ class Simulation():
         people = []
         x,y = 1, 1
         for i in range(root):
-            people.append(Person(x, y, step_size))
+            people.append(Person(x, y))
             for i in range(root - 1):
                 y += 1
-                people.append(Person(x, y, step_size))
+                people.append(Person(x, y))
             x += 1
             y = 1
 
