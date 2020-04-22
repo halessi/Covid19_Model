@@ -65,9 +65,23 @@ class DSEIR():
 
         
         
+<<<<<<< HEAD
    
 
 
+=======
+        def getDSEIR(results):
+            for value in results:
+                Sy.append(value[0])
+                Ey.append(value[1])
+                Iy.append(value[2])
+                Ry.append(value[3])
+                Dy.append(value[4])
+                Tx.append(value[5])
+            return Sy, Ey, Iy, Ry, Dy
+
+        S_list, E_list, I_list, R_list, D_list = getSEIRD_lists(results)
+>>>>>>> d5e9ca0d7bc0749afad14746ba471b435c2847a2
         
 
         def animation_frame(self, results, e):
@@ -104,9 +118,11 @@ class DSEIR():
         Sy, Ey, Iy, Ry, Dy = self.getSEIRD()
         print (Sy)
 
+
 class timekeeper():
     def __init__(self):
         self.timestep = 0
+
 
 if __name__ == "__main__":
     seird = DSEIR()
