@@ -66,6 +66,7 @@ class DSEIR():
         
         
     def getDSEIR(results):
+        Sy, Ey, Iy, Ry, Dy = [], [], [], [], [],
         for value in results:
             Sy.append(value[0])
             Ey.append(value[1])
