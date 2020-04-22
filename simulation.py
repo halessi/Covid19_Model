@@ -25,12 +25,12 @@ class Simulation():
         number_people = len(people)
         root = math.sqrt(number_people)
 
-        self.fig = plt.figure()
+        self.fig = plt.figure(figsize=(10,10))
         self.ax = plt.axes(xlim = (0, root), ylim = (0, root))
         self.d, = self.ax.plot([person.coordinates[0] for person in self.people],
-                               [person.coordinates[1] for person in self.people], 'ko', label = 'healthy: {}'.format(len(self.people)))
+                               [person.coordinates[1] for person in self.people], 'ko', label = 'healthy: {}'.format(len(self.people)), markersize = 1)
         self.i, = self.ax.plot([person.coordinates[0] for person in self.infected_people], 
-                               [person.coordinates[1] for person in self.infected_people], 'ro', label = 'infected: {}'.format(len(self.infected_people)))
+                               [person.coordinates[1] for person in self.infected_people], 'ro', label = 'infected: {}'.format(len(self.infected_people)), markersize = 1)
         plt.legend(loc = 'upper left')
         return 
 
