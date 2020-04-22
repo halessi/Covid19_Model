@@ -15,24 +15,20 @@ class DSEIR():
         self.sigma = args.sig                    #Rate of latent individuals becoming infected
         self.gamma =  args.gam                   #recovery/ mortality rate == 1/duration of infection = gamma
         self.mu = args.mu              #Death rate
-        self.prob_Meeting_New_Person = args.prob_people    #beta knot= probability of infection if meeting an infected person
-        self.number_People_Encountered = args.numb_people    #k = total number of people encountered
-
+        self.prob_Meeting_New_Person = args.prob    #beta knot= probability of infection if meeting an infected person
+        self.number_People_Encountered = args.numb    #k = total number of people encountered
         self.runAll()
-
     
     def getPrimaryDeriv(self, initial_conditions, time, params):
         self.E, self.I, self.R, self.D, self.N = self.initial_conditions
         self.S = self.N - (self.E + self.I + self.R + self.D)
         self.beta, self.sigma, self.gamma, self.mu = self.params
-
         self.primary_results = odeint(func = self.takeDeriv, y0 = [self.S, self.E, self.I, self.R, self.D], \
             t = self.time, args=(self.beta, self.gamma, self.sigma, self.mu))
         self.primary_resultsLIST = self.primary_results.tolist()
         return self.primary_resultsLIST 
 
     def takeDeriv(self, initial_value, t, beta, sigma, gamma, mu):
-        print(initial_value)
         self.S, self.E, self.I, self.R, self.D = initial_value
         self.N = self.S + self.E + self. I + self.R + self.D
         self.dSdt = (-self.beta * self.S * self.I )/ self.N
@@ -63,20 +59,6 @@ class DSEIR():
         lineD.set_label('Dead')
         ax.legend(loc = 'center right')
 
-        
-        
-    def getDSEIR(self):
-        Sy, Ey, Iy, Ry, Dy = [], [], [], [], [],
-        for value in self.primary_results:
-            Sy.append(value[0])
-            Ey.append(value[1])
-            Iy.append(value[2])
-            Ry.append(value[3])
-            Dy.append(value[4])
-        return Sy, Ey, Iy, Ry, Dy
-
-        
-
         def animation_frame(self, results, e):
             lineS.set_data(Tx[0:e.timestep], Sy[0:e.timestep])
             lineE.set_data(Tx[0:e.timestep], Ey[0:e.timestep])
@@ -90,8 +72,20 @@ class DSEIR():
         timestep = timekeeper()
         animation = FuncAnimation(fig, func = animation_frame,  fargs = [results, timestep], interval = 100)
         plt.show()
+        
+    def getDSEIR(self):
+        '''
+        this iz th3e documentation
+        '''
+        Sy, Ey, Iy, Ry, Dy = [], [], [], [], [],
+        for value in self.primary_results:
+            Sy.append(value[0])
+            Ey.append(value[1])
+            Iy.append(value[2])
+            Ry.append(value[3])
+            Dy.append(value[4])
+        return Sy, Ey, Iy, Ry, Dy
 
-   
 
     def runAll(self):
         self.time = np.linspace(0, self.time_days, self.time_days +1) #grid of time points for simulation
@@ -99,14 +93,10 @@ class DSEIR():
         self.params = self.beta, self.sigma, self.gamma, self.mu                             #parameter tuple to be unpacked to calculate dif eqs
         self.initial_conditions = self.E, self.I, self.R, self.D, self.total_people      #initial conditions of simulation tuple to be unpacked for dif eqs
         self.primaryResults = self.getPrimaryDeriv(self.initial_conditions, self.time, self.params)
-        Sy, Ey, Iy, Ry, Dy = self.getDSEIR()
-        print (Sy)
-
 
 class timekeeper():
     def __init__(self):
         self.timestep = 0
-
 
 if __name__ == "__main__":
     seird = DSEIR( args)

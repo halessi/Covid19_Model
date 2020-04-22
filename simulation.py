@@ -20,6 +20,10 @@ class Simulation():
                                        number_infected = args.I,
                                        number_exposed = args.E,
                                        )
+
+        self.DSEIR = DSEIR(args)
+        self.DSEIR_values = self.DSEIR.getDSEIR() # S E I R D, order
+
         self.plot = self.load_plot(number_people = args.TP)
 
     def load_plot(self, number_people):
@@ -36,6 +40,8 @@ class Simulation():
                                [person.coordinates[1] for person in self.exposed_people], 'mo', label = 'exposed: {}'.format(len(self.exposed_people)), markersize = 1)
         self.r, = self.ax.plot([person.coordinates[0] for person in self.recovered_people], 
                                [person.coordinates[1] for person in self.recovered_people], 'go', label = 'recovered: {}'.format(len(self.recovered_people)), markersize = 1)
+        self.p, = self.ax.plot([person.coordinates[0] for person in self.dead_people], 
+                               [person.coordinates[1] for person in self.dead_people], 'ko', label = 'dead: {}'.format(len(self.recovered_people)), markersize = 1)
         plt.legend(loc = 'upper left')
         return 
 
@@ -99,25 +105,39 @@ class Simulation():
     #                     self.people.remove(healthy_person)
     #                     self.infected_people.append(healthy_person)
 
+    def assign_infections(self):
+        number_new_susceptible = abs(int(self.DSEIR_values[0][self.day] - len(self.people))) # new - existing gives difference for assignment
+        number_new_exposed     = abs(int(self.DSEIR_values[1][self.day] - len(self.exposed_people)))
+        number_new_infected    = abs(int(self.DSEIR_values[2][self.day] - len(self.infected_people)))
+        number_new_recovered   = abs(int(self.DSEIR_values[3][self.day] - len(self.recovered_people)))
+        number_new_dead        = abs(int(self.DSEIR_values[4][self.day] - len(self.dead_people)))
+
+        print(number_new_susceptible, number_new_exposed, number_new_infected, number_new_recovered, number_new_dead)
+        exit()
+
+    def notInfected_takeStep(self):
+        return NotImplementedError
+
+    def infected_takeStep(self):
+        return NotImplementedError
+
     def animate(self, b):
         ''' 
         Create the animation. Function is CALLED by self.run()
         every step of the simulation, updating dot placement and infected
         status. 
         '''
-        for person in self.people:
-            person.take_step()
+        self.notInfected_takeStep()
+        self.infected_takeStep()
 
-        for person in self.infected_people:
-            person.take_step(step_size = 0.1)
+        self.day += 1
+        self.assign_infections()
 
-        self.check_infections()
+        # self.d.set_data([person.coordinates[0] for person in self.people],
+        #                 [person.coordinates[1] for person in self.people])   
 
-        self.d.set_data([person.coordinates[0] for person in self.people],
-                        [person.coordinates[1] for person in self.people])   
-
-        self.i.set_data([person.coordinates[0] for person in self.infected_people],
-                        [person.coordinates[1] for person in self.infected_people])
+        # self.i.set_data([person.coordinates[0] for person in self.infected_people],
+        #                 [person.coordinates[1] for person in self.infected_people])
 
         legend = plt.legend(['healthy: {}'.format(len(self.people)), 
                             'infected: {}'.format(len(self.infected_people))],
@@ -127,7 +147,5 @@ class Simulation():
         return self.d, self.i, legend
 
     def run(self, number_days = 5):
-        SEIRD = DSEIR()
-        S, E, I, R, D = SEIRD.getSEIRD()
         anim = animation.FuncAnimation(self.fig, self.animate, interval = 1)
         plt.show()
