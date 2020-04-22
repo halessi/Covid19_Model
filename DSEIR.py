@@ -91,16 +91,7 @@ class DSEIR():
         animation = FuncAnimation(fig, func = animation_frame,  fargs = [results, timestep], interval = 100)
         plt.show()
 
-    def getSEIRD(self):
-        i=0
-        Sy, Ey, Iy, Ry, Dy, Tx   = [], [], [], [], [], []
-        for value in self.primary_results:
-            Sy.append(value[0])
-            Ey.append(value[1])
-            Iy.append(value[2])
-            Ry.append(value[3])
-            Dy.append(value[4])
-        return Sy, Ey, Iy, Ry, Dy  
+   
 
     def runAll(self):
         self.time = np.linspace(0, self.time_days, self.time_days +1) #grid of time points for simulation
