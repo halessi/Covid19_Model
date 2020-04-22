@@ -11,17 +11,14 @@ class Simulation():
     Runs the simulation and handles updating visuals over time. 
     '''
 
-
     def __init__(self, args):
-        self.infected_people, self.dead_people = [], []
+        self.infected_people, self.dead_people, self.exposed_people, self.recovered_people = [], [], [], []
         self.day = 0
 
         self.people = self.load_people(number_people = args.TP, 
                                        number_infected = args.I,
                                        number_exposed = args.E,
                                        )
-        print('here')
-        exit()
         self.plot = self.load_plot(self.people)
 
     def load_plot(self, people):
@@ -38,7 +35,7 @@ class Simulation():
         plt.legend(loc = 'upper left')
         return 
 
-    def load_people(self, number_people, args):
+    def load_people(self, number_people, number_infected, number_exposed):
         '''Create person objects up to number of people. 
 
         args:
@@ -67,12 +64,18 @@ class Simulation():
             x += 1
             y = 1
 
+        # probably want to concatenate this into one loop, kinda unfortunate as is
+        for i in range(0, number_exposed):
+            person = people[np.random.randint(0, number_people)]
+            person.exposed = True
+            people.remove(person)
+            self.exposed_people.append(person)
 
-        person = people[np.random.randint(0, number_people)]
-        person.infected = True
-
-        people.remove(person)
-        self.infected_people.append(person)
+        for i in range(0, number_infected):
+            person = people[np.random.randint(0, number_people)]
+            person.exposed = True
+            people.remove(person)
+            self.infected_people.append(person)
 
         return people
     
