@@ -21,9 +21,10 @@ class Simulation():
                                        number_exposed = args.E,
                                        )
 
-        self.plot = self.load_plot(number_people = args.TP)
         self.DSEIR = DSEIR(args)
-        self.DSEIR_values = [self.DSEIR.getDSEIR()] # S E I R D, order
+        self.DSEIR_values = self.DSEIR.getDSEIR() # S E I R D, order
+
+        self.plot = self.load_plot(number_people = args.TP)
 
     def load_plot(self, number_people):
         # calculate square root
@@ -103,13 +104,15 @@ class Simulation():
     #                     self.infected_people.append(healthy_person)
 
     def assign_infections(self):
-        number_new_susceptible = self.DSEIR_values[self.day][0] - len(self.people) # new - existing gives difference for assignment
-        number_new_exposed     = self.DSEIR_values[self.day][1] - len(self.exposed_people)
-        number_new_infections  = self.DSEIR_values[self.day][2] - len(self.infected_people) 
-        number_new_recovered   = self.DSEIR_values[self.day][3] - len(self.recovered_people) 
-        number_new_dead        = self.DSEIR_values[self.day][4] - len(self.dead_people)
+        number_new_susceptible = int(self.DSEIR_values[self.day][0] - len(self.people)) # new - existing gives difference for assignment
+        number_new_exposed     = int(self.DSEIR_values[self.day][1] - len(self.exposed_people))
+        number_new_infected    = int(self.DSEIR_values[self.day][2] - len(self.infected_people))
+        number_new_recovered   = int(self.DSEIR_values[self.day][3] - len(self.recovered_people))
+        number_new_dead        = int(self.DSEIR_values[self.day][4] - len(self.dead_people))
 
         print(number_new_exposed)
+        print(number_new_infected)
+        exit()
 
     def animate(self, b):
         ''' 
@@ -134,7 +137,5 @@ class Simulation():
         return self.d, self.i, legend
 
     def run(self, number_days = 5):
-        SEIRD = DSEIR()
-        S, E, I, R, D = SEIRD.getSEIRD()
         anim = animation.FuncAnimation(self.fig, self.animate, interval = 1)
         plt.show()
