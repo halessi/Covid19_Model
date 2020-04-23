@@ -16,12 +16,17 @@ class Simulation():
     def __init__(self, args):
         self.infected_people, self.dead_people, self.exposed_people, self.recovered_people = [], [], [], []
         self.day = 0
-        self.total_number_of_people = args.TP
 
         self.people = self.load_people(number_people = args.TP, 
                                        number_infected = args.I,
                                        number_exposed = args.E,
                                        )
+            
+        self.all_people = [self.people,
+                           self.infected_people,
+                           self.dead_people,
+                           self.recovered_people,
+                           self.exposed_people]
 
         self.DSEIR = DSEIR(args)
         self.DSEIR_values = self.DSEIR.getDSEIR() # S E I R D, order
@@ -90,22 +95,6 @@ class Simulation():
             self.infected_people.append(person)
 
         return people
-    
-    # def check_infections(self):
-    #     '''
-    #     For each infected person, check whether they've come into contact with
-    #     a healthy individual by comparing coordinates. 
-    #     '''
-    #     for infected_person in self.infected_people:
-    #         x, y = infected_person.coordinates[0], infected_person.coordinates[1]
-    #         x_high, x_low = x + self.infected_range, x - self.infected_range
-    #         y_high, y_low = y + self.infected_range, y - self.infected_range
-
-    #         for healthy_person in self.people:
-    #              if (x_high > healthy_person.coordinates[0] > x_low) and (y_high > healthy_person.coordinates[1] > y_low):
-    #                     healthy_person.infected = True
-    #                     self.people.remove(healthy_person)
-    #                     self.infected_people.append(healthy_person)
 
     def update(self):
         #number_new_susceptible = int(self.DSEIR_values[0][self.day] - len(self.people))            # new - existing gives difference for assignment
@@ -113,13 +102,23 @@ class Simulation():
         number_new_infected    = int(self.DSEIR_values[2][self.day] - len(self.infected_people))
         number_new_recovered   = int(self.DSEIR_values[3][self.day] - len(self.recovered_people))
         number_new_dead        = int(self.DSEIR_values[4][self.day] - len(self.dead_people))
-        total_number_susceptible = self.total_number_of_people - (self.DSEIR_values[1][self.day] + self.DSEIR_values[2][self.day] + 
-                                                                  self.DSEIR_values[3][self.day] + self.DSEIR_values[3][self.day])
+        #total_number_susceptible = self.total_number_of_people - (self.DSEIR_values[1][self.day] + self.DSEIR_values[2][self.day] + 
+        #                                                          self.DSEIR_values[3][self.day] + self.DSEIR_values[3][self.day])
        
         self.assign_new_recovered(number = number_new_recovered)
         self.assign_new_dead(number = number_new_dead)
         self.assign_new_infection(number = number_new_infected)
 
+    def assign_new_dead(self, number):
+        for i in range(0, number):
+            new_dead_person = np.random.randint(0, len(self.infected_people))
+            new_dead_person = self.infected_people[new_dead_person]
+
+            new_dead_person.infected = False
+            new_dead_person.dead = True
+
+            self.infected_people.remove(new_dead_person)
+            self.dead_people.append(new_dead_person)
 
     def assign_new_recovered(self, number):
         for i in range(0, number):
@@ -137,11 +136,13 @@ class Simulation():
         # !this could probably be done by figuring out which infected person is closest to another, but alas
 
         for i in range(number):
-            infector = np.random.randint(0, len(self.people))
+            infector = np.random.randint(0, len(self.exposed_people))
+            infector = self.exposed_people[infector]
+
             x_infector, y_infector = infector.coordinates[0], infector.coordinates[1]
 
             # find the closest healthy person to the infector
-            closest_person_to_infector = find_closest_person(infector, type = 'SUSCEPTIBLE')
+            closest_person_to_infector = self.find_closest_person(infector, type = 'SUSCEPTIBLE')
 
             # get em
             closest_person_to_infector.infected = True
@@ -186,18 +187,11 @@ class Simulation():
         for i in range(0, len(people_of_interest)):
             x, y = people_of_interest[i].coordinates[0], people_of_interest[i].coordinates[1]
             x_dif, y_dif = abs(x_POI - x), abs(y_POI - y)   
-            if (x_dif + y_dif) < (x_dif_init, y_dif_init):
+            if (x_dif + y_dif) < (x_dif_init + y_dif_init):
                 x_dif_init, y_dif_init = x_dif, y_dif
                 chosen_person = people_of_interest[i]
 
         return chosen_person
-            
-
-    def notInfected_takeStep(self):
-        return NotImplementedError
-
-    def infected_takeStep(self):
-        return NotImplementedError
 
     def animate(self, b):
         ''' 
@@ -205,20 +199,33 @@ class Simulation():
         every step of the simulation, updating dot placement and infected
         status. 
         '''
-        self.notInfected_takeStep()
-        self.infected_takeStep()
+        for person_type in self.all_people:
+            for person in person_type:
+                person.take_step()
 
         self.day += 1
         self.update()
 
-        # self.d.set_data([person.coordinates[0] for person in self.people],
-        #                 [person.coordinates[1] for person in self.people])   
+        self.d.set_data([person.coordinates[0] for person in self.people],
+                        [person.coordinates[1] for person in self.people])   
 
-        # self.i.set_data([person.coordinates[0] for person in self.infected_people],
-        #                 [person.coordinates[1] for person in self.infected_people])
+        self.i.set_data([person.coordinates[0] for person in self.infected_people],
+                        [person.coordinates[1] for person in self.infected_people])
+
+        self.e.set_data([person.coordinates[0] for person in self.exposed_people],
+                        [person.coordinates[1] for person in self.exposed_people]) 
+
+        self.r.set_data([person.coordinates[0] for person in self.recovered_people],
+                        [person.coordinates[1] for person in self.recovered_people]) 
+
+        self.p.set_data([person.coordinates[0] for person in self.dead_people],
+                        [person.coordinates[1] for person in self.dead_people]) 
 
         legend = plt.legend(['healthy: {}'.format(len(self.people)), 
-                            'infected: {}'.format(len(self.infected_people))],
+                             'infected: {}'.format(len(self.infected_people)),
+                             'exposed: {}'.format(len(self.exposed_people)),
+                             'recovered: {}'.format(len(self.recovered_people)),
+                             'dead: {}'.format()],
                             #'day: {}'.format(self.day)], 
                             loc = 'upper left')
 
@@ -227,3 +234,20 @@ class Simulation():
     def run(self, number_days = 5):
         anim = animation.FuncAnimation(self.fig, self.animate, interval = 1)
         plt.show()
+
+    '''old function for random'''
+    # def check_infections(self):
+    #     '''
+    #     For each infected person, check whether they've come into contact with
+    #     a healthy individual by comparing coordinates. 
+    #     '''
+    #     for infected_person in self.infected_people:
+    #         x, y = infected_person.coordinates[0], infected_person.coordinates[1]
+    #         x_high, x_low = x + self.infected_range, x - self.infected_range
+    #         y_high, y_low = y + self.infected_range, y - self.infected_range
+
+    #         for healthy_person in self.people:
+    #              if (x_high > healthy_person.coordinates[0] > x_low) and (y_high > healthy_person.coordinates[1] > y_low):
+    #                     healthy_person.infected = True
+    #                     self.people.remove(healthy_person)
+    #                     self.infected_people.append(healthy_person)
