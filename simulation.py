@@ -107,7 +107,7 @@ class Simulation():
     #                     self.people.remove(healthy_person)
     #                     self.infected_people.append(healthy_person)
 
-    def assign_infections(self):
+    def update(self):
         #number_new_susceptible = int(self.DSEIR_values[0][self.day] - len(self.people))            # new - existing gives difference for assignment
         number_new_exposed     = int(self.DSEIR_values[1][self.day] - len(self.exposed_people))
         number_new_infected    = int(self.DSEIR_values[2][self.day] - len(self.infected_people))
@@ -116,33 +116,37 @@ class Simulation():
         total_number_susceptible = self.total_number_of_people - (self.DSEIR_values[1][self.day] + self.DSEIR_values[2][self.day] + 
                                                                   self.DSEIR_values[3][self.day] + self.DSEIR_values[3][self.day])
        
-        # update recovereds
-        for i in range(0, number_new_recovered):
-            self.assign_new_recovered()
+        self.assign_new_recovered(number = number_new_recovered)
+        self.assign_new_dead(number = number_new_dead)
+        self.assign_new_infection(number = number_new_infected)
 
-        # update infected
-        for i in range(0, number_new_infected):
-            self.assign_new_infection()
 
-    def assign_new_recovered(self):
-        recoveree = np.random.randint(0, len(self.infected_people))
-        recoveree = self.infected_people[recoveree]
-        self.infected_people.remove(recoveree)
-        self.recovered_people.append(recoveree)
+    def assign_new_recovered(self, number):
+        for i in range(0, number):
+            recoveree = np.random.randint(0, len(self.infected_people))
+            recoveree = self.infected_people[recoveree]
 
-    def assign_new_infection(self):
+            recoveree.infected = False
+            recoveree.recovered = True
+
+            self.infected_people.remove(recoveree)
+            self.recovered_people.append(recoveree)
+
+    def assign_new_infection(self, number):
         # randomly decide which infected person is going to infect another 
         # !this could probably be done by figuring out which infected person is closest to another, but alas
-        infector = np.random.randint(0, len(self.people))
-        x_infector, y_infector = infector.coordinates[0], infector.coordinates[1]
 
-        # find the closest healthy person to the infector
-        closest_person_to_infector = find_closest_person(infector, type = 'SUSCEPTIBLE')
+        for i in range(number):
+            infector = np.random.randint(0, len(self.people))
+            x_infector, y_infector = infector.coordinates[0], infector.coordinates[1]
 
-        # get em
-        closest_person_to_infector.infected = True
-        self.people.remove(closest_person_to_infector)
-        self.infected_people.append(closest_person_to_infector)
+            # find the closest healthy person to the infector
+            closest_person_to_infector = find_closest_person(infector, type = 'SUSCEPTIBLE')
+
+            # get em
+            closest_person_to_infector.infected = True
+            self.people.remove(closest_person_to_infector)
+            self.infected_people.append(closest_person_to_infector)
 
     def find_closest_person(self, POI, type = None):
         '''
@@ -205,7 +209,7 @@ class Simulation():
         self.infected_takeStep()
 
         self.day += 1
-        self.assign_infections()
+        self.update()
 
         # self.d.set_data([person.coordinates[0] for person in self.people],
         #                 [person.coordinates[1] for person in self.people])   
