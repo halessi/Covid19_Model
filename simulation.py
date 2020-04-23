@@ -1,11 +1,12 @@
 import math
 
 import numpy as np
+from DSEIR import DSEIR
 from matplotlib import animation
 from matplotlib import pyplot as plt
 from person import Person
-from DSEIR import DSEIR
 from utils import *
+
 
 class Simulation():
     '''
@@ -15,6 +16,7 @@ class Simulation():
     def __init__(self, args):
         self.infected_people, self.dead_people, self.exposed_people, self.recovered_people = [], [], [], []
         self.day = 0
+        self.total_number_of_people = args.TP
 
         self.people = self.load_people(number_people = args.TP, 
                                        number_infected = args.I,
@@ -106,14 +108,73 @@ class Simulation():
     #                     self.infected_people.append(healthy_person)
 
     def assign_infections(self):
-        number_new_susceptible = abs(int(self.DSEIR_values[0][self.day] - len(self.people))) # new - existing gives difference for assignment
-        number_new_exposed     = abs(int(self.DSEIR_values[1][self.day] - len(self.exposed_people)))
-        number_new_infected    = abs(int(self.DSEIR_values[2][self.day] - len(self.infected_people)))
-        number_new_recovered   = abs(int(self.DSEIR_values[3][self.day] - len(self.recovered_people)))
-        number_new_dead        = abs(int(self.DSEIR_values[4][self.day] - len(self.dead_people)))
+        #number_new_susceptible = int(self.DSEIR_values[0][self.day] - len(self.people))            # new - existing gives difference for assignment
+        number_new_exposed     = int(self.DSEIR_values[1][self.day] - len(self.exposed_people))
+        number_new_infected    = int(self.DSEIR_values[2][self.day] - len(self.infected_people))
+        number_new_recovered   = int(self.DSEIR_values[3][self.day] - len(self.recovered_people))
+        number_new_dead        = int(self.DSEIR_values[4][self.day] - len(self.dead_people))
+        total_number_susceptible = self.total_number_of_people - (self.DSEIR_values[1][self.day] + self.DSEIR_values[2][self.day] + 
+                                                                  self.DSEIR_values[3][self.day] + self.DSEIR_values[3][self.day])
 
-        print(number_new_susceptible, number_new_exposed, number_new_infected, number_new_recovered, number_new_dead)
-        exit()
+        for i in range(0, number_new_infected):
+            self.assign_new_infection()
+
+    
+    def assign_new_infection(self):
+        # randomly decide which infected person is going to infect another 
+        # !this could probably be done by figuring out which infected person is closest to another, but alas
+        infector = np.random.randint(0, len(self.people))
+        x_infector, y_infector = infector.coordinates[0], infector.coordinates[1]
+
+        # find the closest healthy person to the infector
+
+        for e in range(0, len(self.people)):
+            person = self.people[e]
+            x, y = person.coordinates[0], person.coordinates[1]
+            x_dif, y_dif = abs(x_infector - x), abs(y_infector - y)
+
+    def find_closest_person(self, POI, type = None):
+        '''
+        find the closest person of a specific type to another person
+
+        args:
+            POI: the person we want to find another close to
+            type: can be EXPOSED, INFECTED, RECOVERED, DEAD, RECOVERED
+
+        returns:
+            person object of closest person
+        '''
+
+        if type is not None:
+            # i think that checking for specific type and choosing list
+            # will be faster than iterating through all people and checking type, for people > 10000ish
+            if type == 'INFECTED':
+                people_of_interest = self.infected
+            elif type == 'EXPOSED':
+                people_of_interest = self.exposed
+            elif type == 'DEAD':
+                people_of_interest = self.dead
+            elif type == 'RECOVERED':
+                people_of_interest = self.recovered
+            else:
+                print('Error in find_closest_person: query type INVALID')
+        else:
+            print('Error in find_closest_person: query requested without specifying type')
+
+        x_POI, y_POI = POI.coordinates[0], POI.coordinates[1]
+        # probably a better way to do this, but l0l
+        x_dif_init, y_dif_init = 10000, 10000
+        chosen_person = None
+
+        for i in range(0, len(people_of_interest)):
+            x, y = people_of_interest[i].coordinates[0], people_of_interest[i].coordinates[1]
+            x_dif, y_dif = abs(x_POI - x), abs(y_POI - y)   
+            if (x_dif + y_dif) < (x_dif_init, y_dif_init):
+                x_dif_init, y_dif_init = x_dif, y_dif
+                chosen_person = people_of_interest[i]
+
+        return chosen_person
+            
 
     def notInfected_takeStep(self):
         return NotImplementedError
