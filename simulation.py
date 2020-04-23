@@ -40,15 +40,15 @@ class Simulation():
         self.fig = plt.figure(figsize=(10,10))
         self.ax = plt.axes(xlim = (0, root), ylim = (0, root))
         self.d, = self.ax.plot([person.coordinates[0] for person in self.people],
-                               [person.coordinates[1] for person in self.people], 'bo', label = 'susceptible: {}'.format(len(self.people)), markersize = 1)
+                               [person.coordinates[1] for person in self.people], 'bo', label = 'susceptible: {}'.format(len(self.people)), markersize = 2)
         self.i, = self.ax.plot([person.coordinates[0] for person in self.infected_people], 
-                               [person.coordinates[1] for person in self.infected_people], 'ro', label = 'infected: {}'.format(len(self.infected_people)), markersize = 1)
+                               [person.coordinates[1] for person in self.infected_people], 'ro', label = 'infected: {}'.format(len(self.infected_people)), markersize = 2)
         self.e, = self.ax.plot([person.coordinates[0] for person in self.exposed_people],
-                               [person.coordinates[1] for person in self.exposed_people], 'mo', label = 'exposed: {}'.format(len(self.exposed_people)), markersize = 1)
+                               [person.coordinates[1] for person in self.exposed_people], 'mo', label = 'exposed: {}'.format(len(self.exposed_people)), markersize = 2)
         self.r, = self.ax.plot([person.coordinates[0] for person in self.recovered_people], 
-                               [person.coordinates[1] for person in self.recovered_people], 'go', label = 'recovered: {}'.format(len(self.recovered_people)), markersize = 1)
+                               [person.coordinates[1] for person in self.recovered_people], 'go', label = 'recovered: {}'.format(len(self.recovered_people)), markersize = 2)
         self.p, = self.ax.plot([person.coordinates[0] for person in self.dead_people], 
-                               [person.coordinates[1] for person in self.dead_people], 'ko', label = 'dead: {}'.format(len(self.recovered_people)), markersize = 1)
+                               [person.coordinates[1] for person in self.dead_people], 'ko', label = 'dead: {}'.format(len(self.recovered_people)), markersize = 2)
         plt.legend(loc = 'upper left')
         return 
 
@@ -97,13 +97,10 @@ class Simulation():
         return people
 
     def update(self):
-        #number_new_susceptible = int(self.DSEIR_values[0][self.day] - len(self.people))            # new - existing gives difference for assignment
         number_new_exposed     = int(self.DSEIR_values[1][self.day] - len(self.exposed_people))
         number_new_infected    = int(self.DSEIR_values[2][self.day] - len(self.infected_people))
         number_new_recovered   = int(self.DSEIR_values[3][self.day] - len(self.recovered_people))
         number_new_dead        = int(self.DSEIR_values[4][self.day] - len(self.dead_people))
-        #total_number_susceptible = self.total_number_of_people - (self.DSEIR_values[1][self.day] + self.DSEIR_values[2][self.day] + 
-        #                                                          self.DSEIR_values[3][self.day] + self.DSEIR_values[3][self.day])
        
         self.assign_new_recovered(number = number_new_recovered)
         self.assign_new_dead(number = number_new_dead)
@@ -225,14 +222,14 @@ class Simulation():
                              'infected: {}'.format(len(self.infected_people)),
                              'exposed: {}'.format(len(self.exposed_people)),
                              'recovered: {}'.format(len(self.recovered_people)),
-                             'dead: {}'.format()],
+                             'dead: {}'.format(len(self.dead_people))],
                             #'day: {}'.format(self.day)], 
                             loc = 'upper left')
 
         return self.d, self.i, legend
 
     def run(self, number_days = 5):
-        anim = animation.FuncAnimation(self.fig, self.animate, interval = 1)
+        anim = animation.FuncAnimation(self.fig, self.animate, interval = 10)
         plt.show()
 
     '''old function for random'''
