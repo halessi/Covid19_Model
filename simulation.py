@@ -115,11 +115,21 @@ class Simulation():
         number_new_dead        = int(self.DSEIR_values[4][self.day] - len(self.dead_people))
         total_number_susceptible = self.total_number_of_people - (self.DSEIR_values[1][self.day] + self.DSEIR_values[2][self.day] + 
                                                                   self.DSEIR_values[3][self.day] + self.DSEIR_values[3][self.day])
+       
+        # update recovereds
+        for i in range(0, number_new_recovered):
+            self.assign_new_recovered()
 
+        # update infected
         for i in range(0, number_new_infected):
             self.assign_new_infection()
 
-    
+    def assign_new_recovered(self):
+        recoveree = np.random.randint(0, len(self.infected_people))
+        recoveree = self.infected_people[recoveree]
+        self.infected_people.remove(recoveree)
+        self.recovered_people.append(recoveree)
+
     def assign_new_infection(self):
         # randomly decide which infected person is going to infect another 
         # !this could probably be done by figuring out which infected person is closest to another, but alas
@@ -127,11 +137,12 @@ class Simulation():
         x_infector, y_infector = infector.coordinates[0], infector.coordinates[1]
 
         # find the closest healthy person to the infector
+        closest_person_to_infector = find_closest_person(infector, type = 'SUSCEPTIBLE')
 
-        for e in range(0, len(self.people)):
-            person = self.people[e]
-            x, y = person.coordinates[0], person.coordinates[1]
-            x_dif, y_dif = abs(x_infector - x), abs(y_infector - y)
+        # get em
+        closest_person_to_infector.infected = True
+        self.people.remove(closest_person_to_infector)
+        self.infected_people.append(closest_person_to_infector)
 
     def find_closest_person(self, POI, type = None):
         '''
@@ -139,7 +150,7 @@ class Simulation():
 
         args:
             POI: the person we want to find another close to
-            type: can be EXPOSED, INFECTED, RECOVERED, DEAD, RECOVERED
+            type: can be SUSCEPTIBLE, EXPOSED, INFECTED, RECOVERED, DEAD,
 
         returns:
             person object of closest person
@@ -148,7 +159,9 @@ class Simulation():
         if type is not None:
             # i think that checking for specific type and choosing list
             # will be faster than iterating through all people and checking type, for people > 10000ish
-            if type == 'INFECTED':
+            if type == 'SUSCEPTIBLE':
+                people_of_interest = self.people
+            elif type == 'INFECTED':
                 people_of_interest = self.infected
             elif type == 'EXPOSED':
                 people_of_interest = self.exposed
