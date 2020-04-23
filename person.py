@@ -4,11 +4,6 @@ import math
 class Person():
 
     def __init__(self, x, y):
-        self.infected = False
-        self.exposed = False
-        self.recovered = False
-        self.dead = False
-        self.age = np.random.randint(low = 1, high = 100)
         self.coordinates = (x, y)
 
     def take_step(self, step_size = None):

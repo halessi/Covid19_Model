@@ -105,25 +105,22 @@ class Simulation():
         self.assign_new_recovered(number = number_new_recovered)
         self.assign_new_dead(number = number_new_dead)
         self.assign_new_infection(number = number_new_infected)
+        self.assign_new_exposed(number = number_new_exposed)
+
+    def assign_new_exposed(self, number):
+        for i in range(0, number):
+            new_exposed_person = self.people[np.random.randint90, len(self.people)]
 
     def assign_new_dead(self, number):
         for i in range(0, number):
-            new_dead_person = np.random.randint(0, len(self.infected_people))
-            new_dead_person = self.infected_people[new_dead_person]
-
-            new_dead_person.infected = False
-            new_dead_person.dead = True
+            new_dead_person = self.infected_people[np.random.randint(0, len(self.infected_people))]
 
             self.infected_people.remove(new_dead_person)
             self.dead_people.append(new_dead_person)
 
     def assign_new_recovered(self, number):
         for i in range(0, number):
-            recoveree = np.random.randint(0, len(self.infected_people))
-            recoveree = self.infected_people[recoveree]
-
-            recoveree.infected = False
-            recoveree.recovered = True
+            recoveree = self.infected_people[np.random.randint(0, len(self.infected_people))]
 
             self.infected_people.remove(recoveree)
             self.recovered_people.append(recoveree)
@@ -133,16 +130,13 @@ class Simulation():
         # !this could probably be done by figuring out which infected person is closest to another, but alas
 
         for i in range(number):
-            infector = np.random.randint(0, len(self.exposed_people))
-            infector = self.exposed_people[infector]
+            infector = self.exposed_people[np.random.randint(0, len(self.exposed_people))]
 
             x_infector, y_infector = infector.coordinates[0], infector.coordinates[1]
 
             # find the closest healthy person to the infector
             closest_person_to_infector = self.find_closest_person(infector, type = 'SUSCEPTIBLE')
 
-            # get em
-            closest_person_to_infector.infected = True
             self.people.remove(closest_person_to_infector)
             self.infected_people.append(closest_person_to_infector)
 
@@ -232,19 +226,3 @@ class Simulation():
         anim = animation.FuncAnimation(self.fig, self.animate, interval = 10)
         plt.show()
 
-    '''old function for random'''
-    # def check_infections(self):
-    #     '''
-    #     For each infected person, check whether they've come into contact with
-    #     a healthy individual by comparing coordinates. 
-    #     '''
-    #     for infected_person in self.infected_people:
-    #         x, y = infected_person.coordinates[0], infected_person.coordinates[1]
-    #         x_high, x_low = x + self.infected_range, x - self.infected_range
-    #         y_high, y_low = y + self.infected_range, y - self.infected_range
-
-    #         for healthy_person in self.people:
-    #              if (x_high > healthy_person.coordinates[0] > x_low) and (y_high > healthy_person.coordinates[1] > y_low):
-    #                     healthy_person.infected = True
-    #                     self.people.remove(healthy_person)
-    #                     self.infected_people.append(healthy_person)
