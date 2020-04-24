@@ -26,7 +26,8 @@ class Simulation():
                            self.infected_people,
                            self.dead_people,
                            self.recovered_people,
-                           self.exposed_people]
+                           self.exposed_people
+                           ]
 
         self.DSEIR = DSEIR(args)
         self.DSEIR_values = list(self.DSEIR.getDSEIR()) # S E I R D, order
@@ -37,26 +38,29 @@ class Simulation():
         # calculate square root
         root = math.sqrt(number_people)
 
-        self.fig = plt.figure(figsize=(10,10))
-        self.ax = plt.axes(xlim = (0, root), ylim = (0, root))
-        self.d, = self.ax.plot([person.coordinates[0] for person in self.people],
+        self.fig, self.axs = plt.subplots(2, figsize = (10,10))
+        self.axs[0].set_xlim(0, len(self.DSEIR_values[-1]))
+        self.axs[0].set_ylim(0, number_people)
+
+        self.d, = self.axs[1].plot([person.coordinates[0] for person in self.people],
                                [person.coordinates[1] for person in self.people], 'bo', label = 'susceptible: {}'.format(len(self.people)), markersize = 2)
-        self.i, = self.ax.plot([person.coordinates[0] for person in self.infected_people], 
+        self.i, = self.axs[1].plot([person.coordinates[0] for person in self.infected_people], 
                                [person.coordinates[1] for person in self.infected_people], 'ro', label = 'infected: {}'.format(len(self.infected_people)), markersize = 2)
-        self.e, = self.ax.plot([person.coordinates[0] for person in self.exposed_people],
+        self.e, = self.axs[1].plot([person.coordinates[0] for person in self.exposed_people],
                                [person.coordinates[1] for person in self.exposed_people], 'mo', label = 'exposed: {}'.format(len(self.exposed_people)), markersize = 2)
-        self.r, = self.ax.plot([person.coordinates[0] for person in self.recovered_people], 
+        self.r, = self.axs[1].plot([person.coordinates[0] for person in self.recovered_people], 
                                [person.coordinates[1] for person in self.recovered_people], 'go', label = 'recovered: {}'.format(len(self.recovered_people)), markersize = 2)
-        self.p, = self.ax.plot([person.coordinates[0] for person in self.dead_people], 
+        self.p, = self.axs[1].plot([person.coordinates[0] for person in self.dead_people], 
                                [person.coordinates[1] for person in self.dead_people], 'ko', label = 'dead: {}'.format(len(self.recovered_people)), markersize = 2)
 
-        self.lineS, = self.ax.plot(0, 0)
-        self.lineE, = self.ax.plot(0, 0)
-        self.lineI, = self.ax.plot(0, 0)
-        self.lineR, = self.ax.plot(0, 0)
-        self.lineD, = self.ax.plot(0, 0)
+        self.lineS, = self.axs[0].plot((0, 0), 'b')
+        self.lineE, = self.axs[0].plot((0, 0), 'r')
+        self.lineI, = self.axs[0].plot((0, 0), 'm')
+        self.lineR, = self.axs[0].plot((0, 0), 'g')
+        self.lineD, = self.axs[0].plot((0, 0), 'k')
 
-        plt.legend(loc = 'upper left')
+        #self.axs[1].legend(loc = 'upper left')
+        self.axs[0].legend(bbox_to_anchor = (1.1, 1.1))
         return 
 
     def load_people(self, number_people, number_infected, number_exposed):
@@ -125,7 +129,7 @@ class Simulation():
                 # this will fail the first few loops, as there is no infected person...sometimes
                 infector = self.infected_people[np.random.randint(0, len(self.infected_people))]
             except ValueError:
-                print('assign_new_exposed(): No infected person from which to assign exposed')
+                print('assign_new_exposed(): no infected person from which to assign exposed, drawing from exposed')
                 #! draw from exposed in that case !?
                 infector = self.exposed_people[np.random.randint(0, len(self.exposed_people))]
             x_infector, y_infector = infector.coordinates[0], infector.coordinates[1]
@@ -245,17 +249,18 @@ class Simulation():
         self.lineR.set_data(self.DSEIR_values[-1][0:self.day], self.DSEIR_values[3][0:self.day])
         self.lineD.set_data(self.DSEIR_values[-1][0:self.day], self.DSEIR_values[4][0:self.day])
 
-        legend = plt.legend(['healthy: {}'.format(len(self.people)), 
+        self.axs[0].legend(['healthy: {}'.format(len(self.people)), 
                              'infected: {}'.format(len(self.infected_people)),
                              'exposed: {}'.format(len(self.exposed_people)),
                              'recovered: {}'.format(len(self.recovered_people)),
                              'dead: {}'.format(len(self.dead_people))],
                             #'day: {}'.format(self.day)], 
-                            loc = 'upper left')
+                            #bbox_to_anchor = (1, 1),
+                             loc = 'upper left')
 
-        return self.d, self.i, legend
+        return self.d, self.i, #legend
 
     def run(self, number_days = 5):
-        anim = animation.FuncAnimation(self.fig, self.animate, interval = 10)
+        anim = animation.FuncAnimation(self.fig, self.animate, interval = 50)
         plt.show()
 
