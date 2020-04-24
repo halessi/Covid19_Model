@@ -29,8 +29,8 @@ class Simulation():
                            self.exposed_people]
 
         self.DSEIR = DSEIR(args)
-        self.DSEIR_values = self.DSEIR.getDSEIR() # S E I R D, order
-
+        self.DSEIR_values = list(self.DSEIR.getDSEIR()) # S E I R D, order
+        self.DSEIR_values.append([i for i in range(0, len(self.DSEIR_values[0]))])
         self.plot = self.load_plot(number_people = args.TP)
 
     def load_plot(self, number_people):
@@ -53,6 +53,8 @@ class Simulation():
         self.lineS, = self.ax.plot(0, 0)
         self.lineE, = self.ax.plot(0, 0)
         self.lineI, = self.ax.plot(0, 0)
+        self.lineR, = self.ax.plot(0, 0)
+        self.lineD, = self.ax.plot(0, 0)
 
         plt.legend(loc = 'upper left')
         return 
@@ -220,6 +222,7 @@ class Simulation():
         self.day += 1
         self.update()
 
+        # update dots
         self.d.set_data([person.coordinates[0] for person in self.people],
                         [person.coordinates[1] for person in self.people])   
 
@@ -234,6 +237,13 @@ class Simulation():
 
         self.p.set_data([person.coordinates[0] for person in self.dead_people],
                         [person.coordinates[1] for person in self.dead_people]) 
+
+        # update lines
+        self.lineS.set_data(self.DSEIR_values[-1][0:self.day], self.DSEIR_values[0][0:self.day])
+        self.lineE.set_data(self.DSEIR_values[-1][0:self.day], self.DSEIR_values[1][0:self.day])
+        self.lineI.set_data(self.DSEIR_values[-1][0:self.day], self.DSEIR_values[2][0:self.day])
+        self.lineR.set_data(self.DSEIR_values[-1][0:self.day], self.DSEIR_values[3][0:self.day])
+        self.lineD.set_data(self.DSEIR_values[-1][0:self.day], self.DSEIR_values[4][0:self.day])
 
         legend = plt.legend(['healthy: {}'.format(len(self.people)), 
                              'infected: {}'.format(len(self.infected_people)),
