@@ -49,6 +49,11 @@ class Simulation():
                                [person.coordinates[1] for person in self.recovered_people], 'go', label = 'recovered: {}'.format(len(self.recovered_people)), markersize = 2)
         self.p, = self.ax.plot([person.coordinates[0] for person in self.dead_people], 
                                [person.coordinates[1] for person in self.dead_people], 'ko', label = 'dead: {}'.format(len(self.recovered_people)), markersize = 2)
+
+        self.lineS, = self.ax.plot(0, 0)
+        self.lineE, = self.ax.plot(0, 0)
+        self.lineI, = self.ax.plot(0, 0)
+
         plt.legend(loc = 'upper left')
         return 
 
@@ -101,15 +106,33 @@ class Simulation():
         number_new_infected    = int(self.DSEIR_values[2][self.day] - len(self.infected_people))
         number_new_recovered   = int(self.DSEIR_values[3][self.day] - len(self.recovered_people))
         number_new_dead        = int(self.DSEIR_values[4][self.day] - len(self.dead_people))
-       
-        self.assign_new_recovered(number = number_new_recovered)
-        self.assign_new_dead(number = number_new_dead)
-        self.assign_new_infection(number = number_new_infected)
+
+        self.assign_new_infected(number = number_new_infected)
         self.assign_new_exposed(number = number_new_exposed)
+        self.assign_new_dead(number = number_new_dead)
+        self.assign_new_recovered(number = number_new_recovered)
 
     def assign_new_exposed(self, number):
+        ''' 
+        select a random person to become infected based upon
+        proximity to an infected person
+        '''
+
         for i in range(0, number):
-            new_exposed_person = self.people[np.random.randint90, len(self.people)]
+            try:
+                # this will fail the first few loops, as there is no infected person...sometimes
+                infector = self.infected_people[np.random.randint(0, len(self.infected_people))]
+            except ValueError:
+                print('assign_new_exposed(): No infected person from which to assign exposed')
+                #! draw from exposed in that case !?
+                infector = self.exposed_people[np.random.randint(0, len(self.exposed_people))]
+            x_infector, y_infector = infector.coordinates[0], infector.coordinates[1]
+
+            # find the closest healthy person to the infector
+            closest_person_to_infector = self.find_closest_person(infector, type = 'SUSCEPTIBLE')
+
+            self.people.remove(closest_person_to_infector)
+            self.exposed_people.append(closest_person_to_infector)
 
     def assign_new_dead(self, number):
         for i in range(0, number):
@@ -125,20 +148,20 @@ class Simulation():
             self.infected_people.remove(recoveree)
             self.recovered_people.append(recoveree)
 
-    def assign_new_infection(self, number):
-        # randomly decide which infected person is going to infect another 
-        # !this could probably be done by figuring out which infected person is closest to another, but alas
-
-        for i in range(number):
-            infector = self.exposed_people[np.random.randint(0, len(self.exposed_people))]
-
-            x_infector, y_infector = infector.coordinates[0], infector.coordinates[1]
-
-            # find the closest healthy person to the infector
-            closest_person_to_infector = self.find_closest_person(infector, type = 'SUSCEPTIBLE')
-
-            self.people.remove(closest_person_to_infector)
-            self.infected_people.append(closest_person_to_infector)
+    def assign_new_infected(self, number):
+        for i in range(0, number):
+            # select new infected person from those who have been exposed
+            try:
+                # at the end of the simulation, sometimes a person becomes infected while there are 0 exposed
+                # assign it from healthy if this happens
+                new_infected_person = self.exposed_people[np.random.randint(0, len(self.exposed_people))]
+                self.exposed_people.remove(new_infected_person)
+                self.infected_people.append(new_infected_person)
+            except ValueError:
+                print('assign_new_infected(): no exposed people from which to assign infection, drawing from healthy ')
+                new_infected_person = self.people[np.random.randint(0, len(self.people))]
+                self.people.remove(new_infected_person)
+                self.infected_people.append(new_infected_person)
 
     def find_closest_person(self, POI, type = None):
         '''
@@ -158,13 +181,13 @@ class Simulation():
             if type == 'SUSCEPTIBLE':
                 people_of_interest = self.people
             elif type == 'INFECTED':
-                people_of_interest = self.infected
+                people_of_interest = self.infected_people
             elif type == 'EXPOSED':
-                people_of_interest = self.exposed
+                people_of_interest = self.exposed_people
             elif type == 'DEAD':
-                people_of_interest = self.dead
+                people_of_interest = self.dead_people
             elif type == 'RECOVERED':
-                people_of_interest = self.recovered
+                people_of_interest = self.recovered_people
             else:
                 print('Error in find_closest_person: query type INVALID')
         else:
