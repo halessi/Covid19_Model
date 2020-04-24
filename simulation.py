@@ -108,10 +108,13 @@ class Simulation():
         return people
 
     def update(self):
-        number_new_exposed     = int(self.DSEIR_values[1][self.day] - len(self.exposed_people))
-        number_new_infected    = int(self.DSEIR_values[2][self.day] - len(self.infected_people))
-        number_new_recovered   = int(self.DSEIR_values[3][self.day] - len(self.recovered_people))
-        number_new_dead        = int(self.DSEIR_values[4][self.day] - len(self.dead_people))
+        try:
+            number_new_exposed     = int(self.DSEIR_values[1][self.day] - len(self.exposed_people))
+            number_new_infected    = int(self.DSEIR_values[2][self.day] - len(self.infected_people))
+            number_new_recovered   = int(self.DSEIR_values[3][self.day] - len(self.recovered_people))
+            number_new_dead        = int(self.DSEIR_values[4][self.day] - len(self.dead_people))
+        except:
+            return
 
         self.assign_new_infected(number = number_new_infected)
         self.assign_new_exposed(number = number_new_exposed)
@@ -262,5 +265,5 @@ class Simulation():
 
     def run(self, number_days = 5):
         anim = animation.FuncAnimation(self.fig, self.animate, interval = 50)
-        plt.show()
-
+        #plt.show()
+        anim.save(filename = 'test.gif', fps = 2)
