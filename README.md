@@ -7,7 +7,7 @@ This model was created more as a visual tool to demonstrate the utility of socia
 
 ### Dependencies
 
- ```pip install numpy scipy matplotlib argparse utils person math'''
+ ```pip install numpy scipy matplotlib argparse utils person math```
 
 ### Basic usage
 
@@ -27,6 +27,7 @@ python main.py \
         --prob_people 
         --numb_people
 ```
+
   Argument              | Usage          
 ----------------------- | ------------------
 exposed                 | Initial number of exposed people
@@ -41,10 +42,19 @@ mu                      | Death rate
 prob_people             | beta knot= probability of infection if meeting an infected person
 numb_people              | Average total number of people encountered
 
+
 ### Example
 
 If you want to run a simulation comtaining 100000 individuals with 2 initial exposed people over a time period of 150 days, 0 initial infected, recovered, and dead peple (default values), with sigma, gamma, mu values of .15, .1, and .004 respectively , and the probablity of infection if meeting an infected person is .095, and the average number of people a subject encounters per day to be 15 we can run:
 
-python main.py --exposed 2 --time_days 150 --total_people 100000 --sigma .15 --gamma .1 --mu .004 --prob_people .095 --numb_people 15
+```python main.py --exposed 2 --time_days 150 --total_people 100000 --sigma .15 --gamma .1 --mu .004 --prob_people .095 --numb_people 15```
 
-There will be no temrinal output, just a plot of the simulation that will pop up.
+There will be no temrinal output, just a plot of the simulation that will pop up. Have fun!
+
+
+### References
+[1] https://www.medrxiv.org/content/10.1101/2020.04.02.20050674v2.full.pdf
+[2] https://towardsdatascience.com/simulating-compartmental-models-in-epidemiology-using-python-jupyter-widgets-8d76bdaff5c2
+[3] https://triplebyte.com/blog/modeling-infectious-diseases
+[4] https://arxiv.org/pdf/2002.06563.pdf
+[5] https://www.medrxiv.org/content/10.1101/2020.03.27.20045005v3.full.pdf
