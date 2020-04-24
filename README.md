@@ -53,8 +53,8 @@ There will be no temrinal output, just a plot of the simulation that will pop up
 
 
 ### References
-[1] https://www.medrxiv.org/content/10.1101/2020.04.02.20050674v2.full.pdf
-[2] https://towardsdatascience.com/simulating-compartmental-models-in-epidemiology-using-python-jupyter-widgets-8d76bdaff5c2
-[3] https://triplebyte.com/blog/modeling-infectious-diseases
-[4] https://arxiv.org/pdf/2002.06563.pdf
-[5] https://www.medrxiv.org/content/10.1101/2020.03.27.20045005v3.full.pdf
+[1] https://www.medrxiv.org/content/10.1101/2020.04.02.20050674v2.full.pdf \
+[2] https://towardsdatascience.com/simulating-compartmental-models-in-epidemiology-using-python-jupyter-widgets-8d76bdaff5c2 \
+[3] https://triplebyte.com/blog/modeling-infectious-diseases \
+[4] https://arxiv.org/pdf/2002.06563.pdf \
+[5] https://www.medrxiv.org/content/10.1101/2020.03.27.20045005v3.full.pdf \
