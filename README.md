@@ -39,8 +39,8 @@ total_people            | Total population size
 sigma                   | Rate of latent individuals becoming infectious = 1/average asympotmatic incubation
 gamma                   | Recovery rate == 1/duration of infection = gamma
 mu                      | Death rate
-prob_people             | beta knot= probability of infection if meeting an infected person
-numb_people              | Average total number of people encountered
+prob_people             | Beta knot= probability of infection if meeting an infected person
+numb_people             | Average total number of people encountered
 
 
 ### Example
