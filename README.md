@@ -7,7 +7,7 @@ This model was created more as a visual tool to demonstrate the utility of socia
 
 ### Dependencies
 
- ```pip install numpy scipy matplotlib argparse utils person math```
+ ```pip install numpy scipy matplotlib argparse utils math```
 
 ### Basic usage
 
