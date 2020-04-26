@@ -266,4 +266,5 @@ class Simulation():
     def run(self, number_days = 5):
         anim = animation.FuncAnimation(self.fig, self.animate, interval = 50)
         #plt.show()
-        anim.save(filename = 'test.gif', fps = 2)
+        anim.save('test.gif', writer = 'imagemagick', fps = 5)
+        
