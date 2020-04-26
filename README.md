@@ -1,7 +1,7 @@
 # SEIRD Model of COVID 19 Transmission
 
 
-This libary was created to vidually model the spread of COVID19 in a population using the SEIRD compartmental model. By using real world values realated to COVID19, such as death rate, time of asymptomatic infection, and average duration of infection the dynamics of diseae transmission can be modeled. For any questions or comments, please reach out to ***h_alessi@coloradocollege.edu*** or ***g_nahass@coloradocollege.edu***.
+This libary was created to visually model the spread of COVID19 in a population using the SEIRD compartmental model. By using real world values related to COVID19, such as death rate, time of asymptomatic infection, and average duration of infection, the dynamics of disease transmission can be modeled. For any questions or comments, please reach out to ***h_alessi@coloradocollege.edu*** or ***g_nahass@coloradocollege.edu***.
 
 This model was created more as a visual tool to demonstrate the utility of social distancing in regard to preventing massive hospital overflow and the overall rate of disease progession throughout a population. As such, this model should not be used to inform any personal health decisions as it does not take into consideration countless other varibles that affect COVID19 spread. Please consult the CDC for the most up to date information regarding COVID19.
 
@@ -11,7 +11,7 @@ This model was created more as a visual tool to demonstrate the utility of socia
 
 ### Basic usage
 
-As of now, command line arguments are used to parse parameters. See main.py for default values. Here is a description of the parameters: (as of now)
+As of now, command line arguments are used to parse parameters. See main.py for default values. Here is a description of the parameters: 
 
 ```
 python main.py \
@@ -45,11 +45,11 @@ numb_people             | Average total number of people encountered
 
 ### Example
 
-If you want to run a simulation comtaining 3600 individuals with 1 initial exposed people over a time period of 100 days, 0 initial infected, recovered, and dead peple (default values), with sigma, gamma, mu values of .143, .095, and .0034 respectively , and the probablity of infection if meeting an infected person is .1, and the average number of people a subject encounters per day to be 10 we can run:
+If you want to run a simulation comtaining 3600 individuals with 1 initial exposed people over a time period of 100 days, 0 initial infected, recovered, and dead peple (default values), with sigma, gamma, mu values of .143, .095, and .0034 respectively, the probablity of infection if meeting an infected person is .1, and the average number of people a subject encounters per day to be 10, we can run:
 
 ```python main.py --exposed 1 --time_days 100 --total_people 3600 --sigma .143 --gamma .095 --mu .0034 --prob_people .1 --numb_people 10```
 
-Terminal output indicates when the value used to plot the graph does not equal the value used in the simulation. The main result will be a plot of the simulation that will pop up (example from above shown below). Have fun!
+Terminal output indicates when the value used to assign dot color values does not equal the value used in the simulation and line plot. The main result will be a plot of the simulation that will pop up (example from above shown below). Have fun!
 
 ![Optional Text](../master/images/numb=10.gif)
 
