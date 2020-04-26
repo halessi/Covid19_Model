@@ -45,11 +45,11 @@ numb_people             | Average total number of people encountered
 
 ### Example
 
-If you want to run a simulation comtaining 100000 individuals with 2 initial exposed people over a time period of 150 days, 0 initial infected, recovered, and dead peple (default values), with sigma, gamma, mu values of .15, .1, and .004 respectively , and the probablity of infection if meeting an infected person is .095, and the average number of people a subject encounters per day to be 15 we can run:
+If you want to run a simulation comtaining 3600 individuals with 1 initial exposed people over a time period of 100 days, 0 initial infected, recovered, and dead peple (default values), with sigma, gamma, mu values of .143, .095, and .0034 respectively , and the probablity of infection if meeting an infected person is .1, and the average number of people a subject encounters per day to be 10 we can run:
 
-```python main.py --exposed 2 --time_days 150 --total_people 100000 --sigma .15 --gamma .1 --mu .004 --prob_people .095 --numb_people 15```
+```python main.py --exposed 1 --time_days 100 --total_people 3600 --sigma .143 --gamma .095 --mu .0034 --prob_people .1 --numb_people 10```
 
-There will be no temrinal output, just a plot of the simulation that will pop up. Have fun!
+Terminal output indicates when the value used to plot the graph does not equal the value used in the simulation. The main result will be a plot of the simulation that will pop up (example from above shown below). Have fun!
 
 ![Optional Text](../master/images/numb=10.gif)
 
