@@ -51,6 +51,8 @@ If you want to run a simulation comtaining 100000 individuals with 2 initial exp
 
 There will be no temrinal output, just a plot of the simulation that will pop up. Have fun!
 
+![Optional Text](../master/imagess/numb=10.gif)
+
 
 ### References
 [1] https://www.medrxiv.org/content/10.1101/2020.04.02.20050674v2.full.pdf \
