@@ -53,6 +53,9 @@ Terminal output indicates when the value used to assign dot color values does no
 
 ![Optional Text](../master/images/numb=10.gif)
 
+Below is a panel created by running simulations with varying valus for the average number of people contacted per day (--numb_people)  
+
+![Optional Text](../master/images/covid_gif3.gif)
 
 ### References
 [1] https://www.medrxiv.org/content/10.1101/2020.04.02.20050674v2.full.pdf \
