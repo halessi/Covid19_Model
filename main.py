@@ -24,7 +24,7 @@ if __name__ == "__main__":
     parser.add_argument('--TP', '--total_people', help = 'total population size', type = int, default =  10000)
     parser.add_argument('--sig', '--sigma', help = 'Rate of latent individuals becoming infected (1/latent infection period)', type = int, default =  .143)
     parser.add_argument('--gam', '--gamma', help = 'Recovery rate == 1/duration of infection = gamma', type = int, default =  .095)
-    parser.add_argument('--mu', '--mu', help = ' Death rate', type = int, default =  .0034)
+    parser.add_argument('--mu', '--mu', help = ' Death rate', type = int, default =  .005)
     parser.add_argument('--prob', '--prob_people', help = 'beta knot = probability of infection if meeting an infected person', type = int, default =  .1)
     parser.add_argument('--numb', '--numb_people', help = 'k = total number of people encountered', type = int, default =  10)
 
